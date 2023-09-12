@@ -1,0 +1,6 @@
+.env
+node_modules/
+output/
+output-examples/
+test-data/
+.DS_Store
