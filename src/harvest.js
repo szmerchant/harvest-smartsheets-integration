@@ -23,8 +23,10 @@ async function testAuthentication() {
     if (response.status === 200) {
       const user = response.data;
       console.log('Harvest authenticated user: ', user);
+      return true;
     } else {
       console.error('Harvest authentication failed: ', response.statusText);
+      return false;
     }
   } catch (error) {
     throw error;

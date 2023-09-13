@@ -12,14 +12,12 @@ const smartsheet = client.createClient({
 
 async function testAuthentication() {
   try {
-    // Call the GetCurrentUser endpoint to test authentication
     const user = await smartsheet.users.getCurrentUser();
-
-    // If authentication is successful, this will return user information
     console.log('Smartsheets authenticated user: ', user);
-
+    return true;
   } catch (error) {
     console.error('Smartsheets authentication failed: ', error.message);
+    return false;
   }
 }
 
