@@ -38,36 +38,23 @@ async function saveTimeEntriesToCSV(timeEntries, filePath) {
   // Flatten the nested objects within each time entry
   const flattenedTimeEntries = timeEntries.map((entry) => {
     return {
-      'ID': entry.id,
       'Spent Date': entry.spent_date,
       'Hours': entry.hours,
-      'Hours Without Timer': entry.hours_without_timer,
-      'Rounded Hours': entry.rounded_hours,
       'Notes': entry.notes,
       'Is Locked': entry.is_locked,
       'Locked Reason': entry.locked_reason,
       'Is Closed': entry.is_closed,
       'Is Billed': entry.is_billed,
-      'Timer Started At': entry.timer_started_at,
-      'Started Time': entry.started_time,
-      'Ended Time': entry.ended_time,
-      'Is Running': entry.is_running,
       'Billable': entry.billable,
       'Budgeted': entry.budgeted,
       'Billable Rate': entry.billable_rate,
       'Cost Rate': entry.cost_rate,
-      'Created At': entry.created_at,
       'Updated At': entry.updated_at,
       'User ID': entry.user.id,
       'User Name': entry.user.name,
-      'Client ID': entry.client.id,
       'Client Name': entry.client.name,
-      'Project ID': entry.project.id,
       'Project Name': entry.project.name,
-      'Task ID': entry.task.id,
-      'Task Name': entry.task.name,
-      'User Assignment ID': entry.user_assignment.id,
-      'Task Assignment ID': entry.task_assignment.id,
+      'Task Name': entry.task.name
     };
   });
 
