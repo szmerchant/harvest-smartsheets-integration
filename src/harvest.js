@@ -73,10 +73,42 @@ async function getAllProjects() {
   }
 }
 
+async function getAllUsers() {
+  try {
+    const response = await axiosInstance.get(`/users`, {
+      params: {},
+    });
+    return response.data.users;
+  } catch (error) {
+    throw error;
+  }
+}
+
 async function getProjectManagers(projectId) {
   const response = await axiosInstance.get(`/projects/${projectId}/user_assignments`);
   const projectManagers = response.data.user_assignments.filter((assignment) => assignment.is_project_manager && assignment.is_active);
   return projectManagers;
+}
+
+async function getLatestTimeEntryByUser(userId) {
+  try {
+    const timeEntriesResponse = await axiosInstance.get(`/time_entries`, {
+      params: {
+        user_id: userId,
+        per_page: 1, // Fetch only one time entry to get the latest
+        sort: 'spent_date:desc', // Sort by spent_date in descending order
+      },
+    });
+
+    if (timeEntriesResponse.data.total_entries > 0) {
+      return timeEntriesResponse.data.time_entries[0].spent_date;
+    } else {
+      return null; // No time entries found
+    }
+  } catch (error) {
+    console.error(`Error fetching time entries for user ID ${userId}: ${error.message}`);
+    throw error; // Propagate the error for handling in the calling function
+  }
 }
 
 async function getUser(userId) {
@@ -86,9 +118,11 @@ async function getUser(userId) {
 
 module.exports = {
   testAuthentication,
-  getTimeEntries: getTimeEntries,
+  getTimeEntries,
   getAllProjects,
+  getAllUsers,
   getProjectManagers,
+  getLatestTimeEntryByUser,
   getUser,
 };
 

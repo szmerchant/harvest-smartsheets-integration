@@ -31,6 +31,16 @@ async function enhanceProjectsWithManagers(projects) {
   return projects;
 }
 
+async function enhanceUsersWithTimeData(users) {
+  // TODO: Iterate through users and enhance them with latest time entry date
+  for (const user of users) {
+    const latestTimeEntryDate = await harvest.getLatestTimeEntryByUser(user.id);
+    user['last_time_entry_date'] = latestTimeEntryDate;
+  }
+
+  return users;
+}
+
 async function saveTimeEntriesToCSV(timeEntries, filePath) {
   // Ensure that the directory structure leading to the file path exists
   mkdirp.sync(filePath.substring(0, filePath.lastIndexOf('/')));
@@ -125,8 +135,53 @@ async function saveProjectsToCSV(projects, filePath) {
   }
 }
 
+async function saveUsersToCSV(users, filePath) {
+  // Ensure that the directory structure leading to the file path exists
+  mkdirp.sync(filePath.substring(0, filePath.lastIndexOf('/')));
+
+  // Flatten the nested objects within each user
+  const flattenedUsers = users.map((user) => {
+    return {
+      'ID': user.id,
+      'First Name': user.first_name,
+      'Last Name': user.last_name,
+      'Email': user.email,
+      'Telephone': user.telephone,
+      'Timezone': user.timezone,
+      'Has Access To All Future Projects': user.has_access_to_all_future_projects,
+      'Can Create Projects': user.can_create_projects,
+      'Is Contractor': user.is_contractor,
+      'Is Active': user.is_active,
+      'Weekly Capacity': user.weekly_capacity,
+      'Default Hourly Rate': user.default_hourly_rate,
+      'Cost Rate': user.cost_rate,
+      'Roles': user.roles,
+      'Access Roles': user.access_roles,
+      'Permissions Claims': user.permissions_claims,
+      'Created At': user.created_at,
+      'Updated At': user.updated_at,
+      'Last Time Entry Date': user.last_time_entry_date
+    };
+  });
+
+  // Create a writable stream and write the CSV data to the file
+  const csvWriter = createCsvWriter({
+    path: filePath,
+    header: Object.keys(flattenedUsers[0]).map((key) => ({ id: key, title: key })),
+  });
+
+  try {
+    await csvWriter.writeRecords(flattenedUsers);
+    console.log('Users have been saved to CSV successfully.');
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   saveTimeEntriesToCSV,
   saveProjectsToCSV,
-  enhanceProjectsWithManagers, 
+  saveUsersToCSV,
+  enhanceProjectsWithManagers,
+  enhanceUsersWithTimeData
 };

@@ -22,7 +22,7 @@ app.get('/integration/time_entries', async (req, res) => {
   const sheetName = req.query.sheetName;
 
   try {
-    const resultMessage = await services.importHarvestTimeEntriesToSmartsheets(startDate, endDate, folderId, sheetName);
+    const resultMessage = await services.importHarvestTimeEntriesToLocalCSV(startDate, endDate, folderId, sheetName);
     res.status(200).json({ message: resultMessage });
   } catch (error) {
     console.error(error);
