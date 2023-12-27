@@ -1,12 +1,13 @@
 require('dotenv').config();
 const axios = require('axios');
+const axiosRateLimit = require('axios-rate-limit');
 
 const HARVEST_API_KEY = process.env.HARVEST_API_KEY;
 const HARVEST_ACCOUNT_ID = process.env.HARVEST_ACCOUNT_ID;
 
 const harvestApiUrl = 'https://api.harvestapp.com/v2';
 
-const axiosInstance = axios.create({
+const axiosInstance = axiosRateLimit(axios.create({
   baseURL: harvestApiUrl,
   headers: {
     'Authorization': `Bearer ${HARVEST_API_KEY}`,
@@ -15,7 +16,7 @@ const axiosInstance = axios.create({
     'Accept': 'application/json',
     'User-Agent': 'Node.js Harvest API Client',
   },
-});
+}), { maxRequests: 100, perMilliseconds: 15000 });
 
 async function testAuthentication() {
   try {
@@ -60,9 +61,13 @@ async function getTimeEntries(startDate, endDate, page = 1, perPage = 2000) {
 
 async function getAllProjects() {
   try {
-    const response = await axiosInstance.get('/projects');
-    // TODO: remove temporary slice to avoid throttling errors during testing
-    return response.data.projects.slice(0, 3);
+    const response = await axiosInstance.get(`/projects`, {
+      params: {
+        is_active: true
+      },
+    });
+    // Note: slice to retrieve smaller dataset during testing
+    return response.data.projects;
   } catch (error) {
     throw error;
   }

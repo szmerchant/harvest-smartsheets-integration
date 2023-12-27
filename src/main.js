@@ -8,8 +8,8 @@ async function main() {
   const sheetName = 'TestImport';
 
   // Uncomment below to test Harvest time entry sheet generation
-  // const startDate = '2023-09-11';
-  // const endDate = '2023-09-11';
+  // const startDate = '2023-01-01';
+  // const endDate = '2023-12-31';
   // services.importHarvestTimeEntriesToSmartsheets(startDate, endDate, folderId, sheetName)
 
   // Uncomment below to test Harvest project sheet generation

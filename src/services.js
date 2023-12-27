@@ -7,7 +7,7 @@ async function testHarvestAndSmartsheetAuthentication() {
 }
 
 async function importHarvestTimeEntriesToSmartsheets(startDate, endDate, folderId, sheetName) {
-  const filePath = './output/time_entries.csv';
+  const filePath = './output/Harvest.csv';
 
   try {
     // Retrieve time entries from Harvest
